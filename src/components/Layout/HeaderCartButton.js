@@ -1,26 +1,29 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
+
+import { useSelector } from "react-redux/es/hooks/useSelector";
 
 import classes from "./HeaderCartButton.module.css";
 
-import CartContext from "../../store/cart-context";
+
 
 import CartIcon from "../Cart/CartIcon";
 
 const HeaderCartButton = (props) => {
-  const cartCtx = useContext(CartContext);
+
 
   const [btnIsHiglighted, setBtnIsHiglighted] = useState(false);
 
-  const { items } = cartCtx;
+  const itemsRedux = useSelector(state => state.cart.items)
 
-  const numberOfCartItems = cartCtx.items.reduce((curNumber, item) => {
+
+  const numberOfCartItems = itemsRedux.reduce((curNumber, item) => {
     return curNumber + item.amount;
   }, 0);
 
   const btnClasses = `${classes.button} ${btnIsHiglighted ? classes.bump : ''}`;
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (itemsRedux.length === 0) {
 
       return;
       
@@ -33,7 +36,7 @@ const HeaderCartButton = (props) => {
     return () => {
       clearTimeout(timer);
     };
-  }, [items]);
+  }, [itemsRedux]);
 
   return (
     <button className={btnClasses} onClick={props.onClick}>
